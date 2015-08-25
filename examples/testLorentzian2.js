@@ -3,7 +3,7 @@
  */
 //var math = require("mathjs");
 var Matrix = require("ml-matrix");
-var math = Matrix.algebra;
+var math = require("../src/algebra");
 var LM = require("../src/LM");
 
 //Lorentzian function

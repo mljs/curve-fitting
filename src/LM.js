@@ -2,7 +2,7 @@
  * Created by acastillo on 8/5/15.
  */
 var Matrix = require("ml-matrix");
-var math = Matrix.algebra;
+var math = require("./algebra");
 
 var DEBUG = false;
 /** Levenberg Marquardt curve-fitting: minimize sum of weighted squared residuals

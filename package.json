@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/mljs/curve-fitting",
   "dependencies": {
-    "ml-matrix":"../matrix"
+    "ml-matrix":"latest"
   },
   "devDependencies": {
     "browserify": "^8.1.3",

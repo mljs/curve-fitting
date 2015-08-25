@@ -2,6 +2,7 @@
  * Created by acastillo on 8/6/15.
  */
 var LM = require("../src/LM");
+var math = require("../src/algebra");
 //p is a column
 var lm_func = function(t,p,c){
     //console.log(t);
