@@ -2,7 +2,7 @@
 
 minimize sum of weighted squared residuals. Javascript version of matlab library from Henri Gavin.
 
-Levenberg Marquardt curve-fitting: minimize sum of weighted squared residuals()
+See example for usage
 
 ## ---------  INPUT  VARIABLES  -----------
  
