@@ -3,7 +3,9 @@
 minimize sum of weighted squared residuals. Javascript version of matlab library from Henri Gavin.
 
 Levenberg Marquardt curve-fitting: minimize sum of weighted squared residuals()
- ----------  INPUT  VARIABLES  -----------
+
+## ---------  INPUT  VARIABLES  -----------
+ 
  func   = function of n independent variables, 't', and m parameters, 'p',
  returning the simulated model: y_hat = func(t,p,c)
  p      = n-vector of initial guess of parameter values
