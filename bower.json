@@ -1,0 +1,32 @@
+{
+  "name": "curve-fitting",
+  "version": "0.0.1",
+  "description": "Levenberg Marquardt curve-fitting: minimize sum of weighted squared residuals"",
+  "keywords": [
+    "optimizarion",
+    "curve-fitting",
+    "fit",
+    "numerical",
+    "Levenberg",
+    "Marquardt",
+    "analisys"
+  ],
+  "main": [
+    "dist/curve-fitting.js",
+    "dist/curve-fitting.min.js"
+  ],
+  "authors": [
+    "Andres Castillo"
+  ],
+  "homepage": "https://github.com/mljs/curve-fitting",
+  "license": "MIT",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "/*",
+    "!dist/*"
+  ]
+}

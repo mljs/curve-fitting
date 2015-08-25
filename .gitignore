@@ -1,0 +1,8 @@
+.idea
+node_modules
+.DS_Store
+.npmignore
+
+dist/curve-fitting.js
+dist/curve-fitting.min.js
+dist/curve-fitting.min.js.map
