@@ -1,8 +1,10 @@
 /**
  * Created by acastillo on 8/6/15.
  */
-var LM = require("../src/LM");
+var Matrix = require("ml-matrix");
 var math = require("../src/algebra");
+var LM = require("../src/LM");
+
 //p is a column
 var lm_func = function(t,p,c){
     //console.log(t);
@@ -28,21 +30,21 @@ var consts = [ ];   // optional vector of constants
 
 var Npnt = 100;				  // number of data points
 
-var t = new Array(Npnt);//[1:Npnt]';				  // independent variable
+var t = math.matrix(Npnt,1);//[1:Npnt]';				  // independent variable
 
 for(var i=0;i<Npnt;i++)
-    t[i]=[i+1];
+    t[i][0]=i+1;
 //t = math.transpose(math.matrix(t));
 // true value of parameters ...
 var p_true = [];
-if(example_number == 1) p_true  = [ [20],   [10],   [1],  [50] ];
-if(example_number == 2) p_true  = [ [20],  [-24],  [30], [-40] ];
-if(example_number == 3) p_true  = [  [6],   [20],   [1],   [5] ];
+if(example_number == 1) p_true  = math.matrix([ [20],   [10],   [1],  [50] ]);
+if(example_number == 2) p_true  = math.matrix([ [20],  [-24],  [30], [-40] ]);
+if(example_number == 3) p_true  = math.matrix([  [6],   [20],   [1],   [5] ]);
 
 var y_dat = lm_func(t, p_true, consts);
 
 //console.log("here "+math.size(y_dat)+" "+math.size(t)+" "+math.size(math.random([Npnt,1], 0, 0.1)));
-var y_dat = math.add(y_dat, math.random([Npnt,1], 0, 0.1));//0.1*Math.randn(Npnt,1);	  // add random noise
+var y_dat = math.add(y_dat, math.multiply(math.random(Npnt,1),0.1));//0.1*Math.randn(Npnt,1);	  // add random noise
 
 // range of values for basic paramter search
 /*var p1 = 0.1*p_true(1):0.2*p_true(1):2*p_true(1);
@@ -84,9 +86,9 @@ plotfile = ['lm_exampA',int2str(example_number),'.eps'];
 
 // initial guess parameters  ...
 var p_init = [];
-if(example_number == 1) p_init  = [[5], [2], [0.2], [10] ];
-if(example_number == 2) p_init  = [[4], [-5], [6], [10] ];
-if(example_number == 3) p_init  =[ [10], [50], [5], [5.6] ];
+if(example_number == 1) p_init  = math.matrix([[5], [2], [0.2], [10] ]);
+if(example_number == 2) p_init  = math.matrix([[4], [-5], [6], [10] ]);
+if(example_number == 3) p_init  =math.matrix([ [10], [50], [5], [5.6] ]);
 
 //weight = Npnt/sqrt(y_dat'*y_dat);	  // sqrt of sum of data squared
 var weight = [Npnt / math.sqrt(math.multiply(math.transpose(y_dat),y_dat))];
@@ -95,13 +97,6 @@ var weight = [Npnt / math.sqrt(math.multiply(math.transpose(y_dat),y_dat))];
 var p_min = math.multiply(math.abs(p_init),-10);
 var p_max = math.multiply(math.abs(p_init),10);
 
-//{
-/*    figure(3)
-    clf
-    plot(t,y_dat,'o');
-    xlabel('t')
-    ylabel('y(t)')*/
-    //}
 
 // Algorithmic Parameters
 //         prnt MaxIter  eps1  eps2  epx3  eps4  lam0  lamUP lamDN UpdateType
