@@ -77,10 +77,17 @@ See example for usage
  Henri Gavin, Dept. Civil & Environ. Engineering, Duke Univ. 22 Sep 2013
  modified from: [http://octave.sourceforge.net/optim/function/leasqr.html]
  using references by
+ 
  Press, et al., Numerical Recipes, Cambridge Univ. Press, 1992, Chapter 15.
+ 
  Sam Roweis      [http://www.cs.toronto.edu/~roweis/notes/lm.pdf]
+ 
  Manolis Lourakis [http://www.ics.forth.gr/~lourakis/levmar/levmar.pdf]
+ 
  Hans Nielson     [http://www2.imm.dtu.dk/~hbn/publ/TR9905.ps]
+ 
  Mathworks        optimization toolbox reference manual
+ 
  K. Madsen, H.B., Nielsen, and O. Tingleff
+ 
  [http://www2.imm.dtu.dk/pubdb/views/edoc_download.php/3215/pdf/imm3215.pdf]
