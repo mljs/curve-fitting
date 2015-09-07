@@ -1,6 +1,6 @@
 {
-  "name": "curve-fitting",
-  "version": "0.0.4",
+  "name": "ml-curve-fitting",
+  "version": "0.0.5",
   "description": "Levenberg Marquardt curve-fitting: minimize sum of weighted squared residuals",
   "main": "src/index.js",
   "directories": {
