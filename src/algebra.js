@@ -26,7 +26,6 @@ function zeros(rows, cols){
 }
 
 function random(rows, cols){
-    console.log(rows +" "+cols);
     return Matrix.rand(rows,cols);
 }
 
@@ -96,14 +95,14 @@ function diag(A){
             rows = A.length;
             cols = A[0].length;
             r = Math.min(rows,cols);
-            diag = new Matrix.zeros(cols, cols);
+            diag = Matrix.zeros(cols, cols);
             for (j = 0; j < cols; j++) {
                 diag[j][j]=A[j][j];
             }
         }
         else{
             cols = A.length;
-            diag = new Matrix.zeros(cols, cols);
+            diag = Matrix.zeros(cols, cols);
             for (j = 0; j < cols; j++) {
                 diag[j][j]=A[j];
             }
@@ -111,7 +110,7 @@ function diag(A){
 
     }
     if(rows == 1){
-        diag = new Matrix.zeros(cols, cols);
+        diag = Matrix.zeros(cols, cols);
         for (j = 0; j < cols; j++) {
             diag[j][j]=A[0][j];
         }

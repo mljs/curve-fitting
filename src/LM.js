@@ -74,7 +74,7 @@ var LM = {
 
         }
         //p = p(:); y_dat = y_dat(:);		// make column vectors
-
+        var i,k;
         var eps = 2^-52;
         var Npar   = p.length;//length(p); 			// number of parameters
         var Npnt   = y_dat.length;//length(y_dat);		// number of data points
@@ -136,7 +136,7 @@ var LM = {
 
         // indices of the parameters to be fit
         var idx   = [];
-        for(var i=0;i<dp.length;i++){
+        for(i=0;i<dp.length;i++){
             if(dp[i]!=0){
                 idx.push(i);
             }
@@ -203,20 +203,20 @@ var LM = {
             }
 
             /*for(var k=0;k< h.length;k++){
-                h[k]=[h[k]];
-            }*/
+             h[k]=[h[k]];
+             }*/
             //console.log("h "+h);
             //h=math.matrix(h);
             //  big = max(abs(h./p)) > 2;
             //this is a big step
             // --- Are parameters [p+h] much better than [p] ?
             var hidx = new Array(idx.length);
-            for(var k=0;k<idx.length;k++){
+            for(k=0;k<idx.length;k++){
                 hidx[k]=h[idx[k]];
             }
             var p_try = math.add(p, hidx);// update the [idx] elements
 
-            for(var k=0;k<p_try.length;k++){
+            for(k=0;k<p_try.length;k++){
                 p_try[k][0]=Math.min(Math.max(p_min[k][0],p_try[k][0]),p_max[k][0]);
             }
             // p_try = Math.min(Math.max(p_min,p_try),p_max);           // apply constraints
@@ -295,44 +295,6 @@ var LM = {
                         nu = 2 * nu;
                         break;
                 }
-                if (DEBUG) {
-                    /*fprintf('>//3d://3d | chi_sq=//10.3e | lambda=//8.1e \n', iteration,func_calls,X2,lambda );
-                     fprintf('    param:  ');
-                     for pn=1:Npar
-                     fprintf(' //10.3e', p(pn) );
-                     end
-                     fprintf('\n');
-                     fprintf('    dp/p :  ');
-                     for pn=1:Npar
-                     fprintf(' //10.3e', h(pn) / p(pn) );
-                     end
-                     fprintf('\n');
-                     end
-
-
-                     cvg_hst(iteration,:) = [ func_calls  p'  X2/2  lambda ];	// update convergence history
-
-
-                     if ( max(abs(JtWdy)) < epsilon_1  &  iteration > 2 )
-                     fprintf(' **** Convergence in r.h.s. ("JtWdy")  **** \n')
-                     fprintf(' **** epsilon_1 = //e\n', epsilon_1);
-                     stop = 1;
-                     end
-                     if ( max(abs(h./p)) < epsilon_2  &  iteration > 2 )
-                     fprintf(' **** Convergence in Parameters **** \n')
-                     fprintf(' **** epsilon_2 = //e\n', epsilon_2);
-                     stop = 1;
-                     end
-                     if ( X2/(Npnt-Npar+1) < epsilon_3  &  iteration > 2 )
-                     fprintf(' **** Convergence in Chi-square  **** \n')
-                     fprintf(' **** epsilon_3 = //e\n', epsilon_3);
-                     stop = 1;
-                     end
-                     if ( iteration == MaxIter )
-                     disp(' !! Maximum Number of Iterations Reached Without Convergence !!')
-                     stop = 1;
-                     end*/
-                }
             }
         }// --- End of Main Loop
 
@@ -340,9 +302,6 @@ var LM = {
 
         // equal weights for paramter error analysis
         weight_sq = math.multiply(math.multiply(math.transpose(delta_y),delta_y), new Matrix.ones(Npnt,1));
-
-        //console.log("XX "+(Npnt-Nfit+1));
-        //console.log(delta_y);
 
         weight_sq.apply(function(i,j){
             weight_sq[i][j] = (Npnt-Nfit+1)/weight_sq[i][j];
@@ -380,7 +339,7 @@ var LM = {
 
         // endfunction  # ---------------------------------------------------------- LM
 
-        return p;
+        return { p:p, X2:X2};
     },
 
     lm_FD_J:function(func,t,p,y,dp,c) {
