@@ -45,10 +45,11 @@ var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
 var consts = [ ];                         // optional vector of constants
 
 var p_init = math.matrix([[(t[0][0]+t[nbPoints-1][0])/2],[Math.abs(t[0][0]-t[nbPoints-1][0])/2],[1],[0]]);
-var p_min = math.matrix([[t[0][0]],[0.0],[0],[0]]);
+var p_min = math.matrix([[t[0][0]],[Math.abs(t[0][0]-t[nbPoints-1][0])/4],[0.5],[0]]);
 var p_max = math.matrix([[t[nbPoints-1][0]],[Math.abs(t[0][0]-t[nbPoints-1][0])],[1.5],[0.5]]);
 console.log(JSON.stringify(p_init));
 var p_fit = LM.optimize(lm_func,p_init,t,y_data,weight,-0.01,p_min,p_max,consts,opts);
+p_fit = p_fit.p;
 console.log("Init: ");
 console.log(p_init);
 console.log("Fitted: ");

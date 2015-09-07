@@ -78,11 +78,11 @@ var LM = {
         var eps = 2^-52;
         var Npar   = p.length;//length(p); 			// number of parameters
         var Npnt   = y_dat.length;//length(y_dat);		// number of data points
-        var p_old  = new Matrix.zeros(Npar,1);		// previous set of parameters
-        var y_old  = new Matrix.zeros(Npnt,1);		// previous model, y_old = y_hat(t;p_old)
+        var p_old  = Matrix.zeros(Npar,1);		// previous set of parameters
+        var y_old  = Matrix.zeros(Npnt,1);		// previous model, y_old = y_hat(t;p_old)
         var X2     = 1e-2/eps;			// a really big initial Chi-sq value
         var X2_old = 1e-2/eps;			// a really big initial Chi-sq value
-        var J = new Matrix.zeros(Npnt,Npar);
+        var J =  Matrix.zeros(Npnt,Npar);
         /*var J      = new Array(Npnt);//zeros(Npnt,Npar);		// Jacobian matrix
          for(var  i=0;i<Npnt;i++){
          J[i] = new Array(Npar);
@@ -151,7 +151,7 @@ var LM = {
             // squared weighting vector
             //weight_sq = ( weight(1)*ones(Npnt,1) ).^2;
             //console.log("weight[0] "+typeof weight[0]);
-            var tmp = math.multiply(new Matrix.ones(Npnt,1),weight[0]);
+            var tmp = math.multiply(Matrix.ones(Npnt,1),weight[0]);
             weight_sq = math.dotMultiply(tmp,tmp);
         }
         else{
@@ -185,7 +185,7 @@ var LM = {
         //console.log(X2);
         X2_old = X2; // previous value of X2
         //console.log(MaxIter+" "+Npar);
-        var cvg_hst = new Matrix.ones(MaxIter,Npar+3);		// initialize convergence history
+        //var cvg_hst = Matrix.ones(MaxIter,Npar+3);		// initialize convergence history
         var h = null;
         while ( !stop && iteration <= MaxIter ) {		// --- Main Loop
             iteration = iteration + 1;
@@ -199,7 +199,7 @@ var LM = {
                 default:					// Quadratic and Nielsen
                     //h = ( JtWJ + lambda * math.eye(Npar) ) \ JtWdy;
 
-                    h = math.solve(math.add(JtWJ,math.multiply(new Matrix.eye(Npar),lambda)),JtWdy);
+                    h = math.solve(math.add(JtWJ,math.multiply( Matrix.eye(Npar),lambda)),JtWdy);
             }
 
             /*for(var k=0;k< h.length;k++){
@@ -301,7 +301,7 @@ var LM = {
         // --- convergence achieved, find covariance and confidence intervals
 
         // equal weights for paramter error analysis
-        weight_sq = math.multiply(math.multiply(math.transpose(delta_y),delta_y), new Matrix.ones(Npnt,1));
+        weight_sq = math.multiply(math.multiply(math.transpose(delta_y),delta_y), Matrix.ones(Npnt,1));
 
         weight_sq.apply(function(i,j){
             weight_sq[i][j] = (Npnt-Nfit+1)/weight_sq[i][j];
@@ -370,7 +370,7 @@ var LM = {
         var m = y.length;			// number of data points
         var n = p.length;			// number of parameters
 
-        dp = dp || math.multiply(new Matrix.ones(1, n), 0.001);
+        dp = dp || math.multiply( Matrix.ones(1, n), 0.001);
 
         var ps = p.clone();//JSON.parse(JSON.stringify(p));
         //var ps = $.extend(true, [], p);
@@ -506,7 +506,7 @@ var LM = {
 
         //console.log(weight_sq);
 
-        var JtWJ = math.multiply(Jt, math.dotMultiply(J,math.multiply(weight_sq,new Matrix.ones(1,Npar))));
+        var JtWJ = math.multiply(Jt, math.dotMultiply(J,math.multiply(weight_sq, Matrix.ones(1,Npar))));
 
         //JtWdy = J' * ( weight_sq .* delta_y );
         var JtWdy = math.multiply(Jt, math.dotMultiply(weight_sq,delta_y));

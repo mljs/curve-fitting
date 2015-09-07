@@ -106,6 +106,7 @@ var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
 var iterations = 0;
 console.log(LM);
 var p_fit = LM.optimize(lm_func,p_init,t,y_dat,weight,-0.01,p_min,p_max,consts,opts);
+p_fit = p_fit.p;
 var y_fit = lm_func(t,p_fit,consts);
 
 console.log('    initial    true       fit');

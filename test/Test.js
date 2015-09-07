@@ -42,16 +42,15 @@ describe('Levenberg-Marquardt', function () {
         var weight = [nbPoints / math.sqrt(y_data.dot(y_data))];
         var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
         var consts = [ ];                         // optional vector of constants
-
         var p_init = math.matrix([[(t[0][0]+t[nbPoints-1][0])/2],[Math.abs(t[0][0]-t[nbPoints-1][0])/2],[1],[0]]);
         var p_min = math.matrix([[t[0][0]],[0.0],[0],[0]]);
         var p_max = math.matrix([[t[nbPoints-1][0]],[Math.abs(t[0][0]-t[nbPoints-1][0])],[1.5],[0.5]]);
         var p_fit = LM.optimize(lm_func,p_init,t,y_data,weight,-0.01,p_min,p_max,consts,opts);
-
-        p_fit[0][0].should.approximatelyDeep(4.08, 0.001);//Center
-        p_fit[1][0].should.approximatelyDeep(0.176, 0.001);//hwhh
+        p_fit = p_fit.p;
+        p_fit[0][0].should.approximatelyDeep(4.08, 0.01);//Center
+        p_fit[1][0].should.approximatelyDeep(0.176, 0.01);//hwhh
         p_fit[2][0].should.approximatelyDeep(1, 0.01);//height
-        p_fit[3][0].should.approximatelyDeep(0, 0.001);//constant
+        p_fit[3][0].should.approximatelyDeep(0, 0.01);//constant
 
     });
 });
