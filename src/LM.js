@@ -73,7 +73,7 @@ var LM = {
             }
 
         }
-        //p = p(:); y_dat = y_dat(:);		// make column vectors
+        //p = p(:); y_dat = y_dat(:); 		// make column vectors
         var i,k;
         var eps = 2^-52;
         var Npar   = p.length;//length(p); 			// number of parameters
