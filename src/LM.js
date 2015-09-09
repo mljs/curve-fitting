@@ -83,10 +83,7 @@ var LM = {
         var X2     = 1e-2/eps;			// a really big initial Chi-sq value
         var X2_old = 1e-2/eps;			// a really big initial Chi-sq value
         var J =  Matrix.zeros(Npnt,Npar);
-        /*var J      = new Array(Npnt);//zeros(Npnt,Npar);		// Jacobian matrix
-         for(var  i=0;i<Npnt;i++){
-         J[i] = new Array(Npar);
-         }*/
+
 
         if (t.length != y_dat.length) {
             console.log('lm.m error: the length of t must equal the length of y_dat');
@@ -123,9 +120,6 @@ var LM = {
 
         if ( tensor_parameter && prnt == 3 ) prnt = 2;
 
-        //plotcmd='figure(11); plot(t(:,1),y_dat,''og'',t(:,1),y_hat,''-b''); axis tight; drawnow ';
-
-        //p_min=p_min(:); p_max=p_max(:); 	// make column vectors
 
         if(!dp.length || dp.length == 1){
             var dp_array = new Array(Npar);
