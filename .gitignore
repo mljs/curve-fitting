@@ -6,3 +6,5 @@ node_modules
 dist/curve-fitting.js
 dist/curve-fitting.min.js
 dist/curve-fitting.min.js.map
+
+npm-debug.log
