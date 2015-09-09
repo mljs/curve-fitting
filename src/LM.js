@@ -137,7 +137,7 @@ var LM = {
         // indices of the parameters to be fit
         var idx   = [];
         for(i=0;i<dp.length;i++){
-            if(dp[i]!=0){
+            if(dp[i][0]!=0){
                 idx.push(i);
             }
         }
@@ -370,7 +370,7 @@ var LM = {
         var m = y.length;			// number of data points
         var n = p.length;			// number of parameters
 
-        dp = dp || math.multiply( Matrix.ones(1, n), 0.001);
+        dp = dp || math.multiply( Matrix.ones(n, 1), 0.001);
 
         var ps = p.clone();//JSON.parse(JSON.stringify(p));
         //var ps = $.extend(true, [], p);
