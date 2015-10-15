@@ -5,7 +5,7 @@ minimize sum of weighted squared residuals. Javascript version of matlab library
 See example for usage
 
 ### ---------  INPUT  VARIABLES  -----------
- 
+ ``
  func   = function of n independent variables, 't', and m parameters, 'p',
  
  returning the simulated model: y_hat = func(t,p,c)
@@ -66,7 +66,7 @@ See example for usage
  
  3: Nielsen's lambda update equations
  
-
+```
 ### ----------  OUTPUT  VARIABLES  -----------
 
  p       = least-squares optimal estimate of the parameter values
