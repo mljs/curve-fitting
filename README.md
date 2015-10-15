@@ -14,6 +14,8 @@ minimize sum of weighted squared residuals. Javascript version of matlab library
 
 ## [Documentation](./Documentation.md)
 
+## [Example: Trilateration](./Example.md)
+
 ## License
 
   [MIT](./LICENSE)
