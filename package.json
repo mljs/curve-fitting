@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "mocha --require should-approximately-deep --reporter mocha-better-spec-reporter --recursive",
-    "build": "gulp build"
+    "build": "cheminfo build"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/mljs/curve-fitting",
   "dependencies": {
+    "cheminfo-tools": "^1.0.2",
     "ml-matrix":"0.1.0"
   },
   "devDependencies": {
@@ -49,7 +50,6 @@
     "should": "^7.0.2",
     "should-approximately-deep": "^1.1.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.0.0",
-    "ml-matrix":"0.1.0"
+    "vinyl-source-stream": "^1.0.0"
   }
 }

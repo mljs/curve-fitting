@@ -490,6 +490,8 @@ var LM = {
             //console.log("ImPar");
             J = this.lm_Broyden_J(p_old, y_old, J, p, y_hat); // rank-1 update
         }
+        //console.log(y_dat);
+        //console.log(y_hat);
         var delta_y = math.subtract(y_dat, y_hat);	// residual error between model and data
         //console.log(delta_y[0][0]);
         //console.log(delta_y.rows+" "+delta_y.columns+" "+JSON.stringify(weight_sq));
