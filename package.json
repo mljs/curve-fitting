@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/mljs/curve-fitting",
   "dependencies": {
-    "ml-matrix": "0.1.0"
+    "ml-matrix": "^2.0.0"
   },
   "devDependencies": {
     "mocha": "^3.0.2",
