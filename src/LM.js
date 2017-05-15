@@ -308,6 +308,7 @@ var LM = {
 
         var m = y.length;			// number of data points
         var n = p.length;			// number of parameters
+        var y1;
         dp = dp || math.multiply( Matrix.ones(n, 1), 0.001);
 
         var ps = p.clone();
@@ -324,7 +325,7 @@ var LM = {
                 y1 = func(t, p, c);
                 if (dp[j][0] < 0) {		// backwards difference
                     var column = math.dotDivide(math.subtract(y1, y),del[j]);
-                    for(var k=0;k< m;k++){
+                    for(var k=0; k < m; k++) {
                         J[k][j]=column[k][0];
                     }
                     //console.log(column);
