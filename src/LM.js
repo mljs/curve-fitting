@@ -1,6 +1,3 @@
-/**
- * Created by acastillo on 8/5/15.
- */
 var Matrix = require("ml-matrix");
 var math = require("./algebra");
 
@@ -140,11 +137,8 @@ var LM = {
         var stop = false;				// termination flag
 
         var weight_sq = null;
-        //console.log(weight);
         if ( !weight.length || weight.length < Npnt )	{
             // squared weighting vector
-            //weight_sq = ( weight(1)*ones(Npnt,1) ).^2;
-            //console.log("weight[0] "+typeof weight[0]);
             var tmp = math.multiply(Matrix.ones(Npnt,1),weight[0]);
             weight_sq = math.dotMultiply(tmp,tmp);
         }
@@ -155,11 +149,8 @@ var LM = {
 
 
         // initialize Jacobian with finite difference calculation
-        //console.log("J "+weight_sq);
         var result = this.lm_matx(func,t,p_old,y_old,1,J,p,y_dat,weight_sq,dp,c);
         var JtWJ = result.JtWJ,JtWdy=result.JtWdy,X2=result.Chi_sq,y_hat=result.y_hat,J=result.J;
-        //[JtWJ,JtWdy,X2,y_hat,J] = this.lm_matx(func,t,p_old,y_old,1,J,p,y_dat,weight_sq,dp,c);
-        //console.log(JtWJ);
 
         if ( Math.max(Math.abs(JtWdy)) < epsilon_1 ){
             console.log(' *** Your Initial Guess is Extremely Close to Optimal ***')
@@ -176,34 +167,19 @@ var LM = {
                 lambda  = lambda_0 * Math.max(math.diag(JtWJ));
                 nu=2;
         }
-        //console.log(X2);
         X2_old = X2; // previous value of X2
-        //console.log(MaxIter+" "+Npar);
-        //var cvg_hst = Matrix.ones(MaxIter,Npar+3);		// initialize convergence history
         var h = null;
         while ( !stop && iteration <= MaxIter ) {		// --- Main Loop
             iteration = iteration + 1;
             // incremental change in parameters
             switch(Update_Type){
                 case 1:					// Marquardt
-                    //h = ( JtWJ + lambda * math.diag(math.diag(JtWJ)) ) \ JtWdy;
-                    //h = math.multiply(math.inv(JtWdy),math.add(JtWJ,math.multiply(lambda,math.diag(math.diag(Npar)))));
                     h = math.solve(math.add(JtWJ,math.multiply(math.diag(math.diag(JtWJ)),lambda)),JtWdy);
                     break;
                 default:					// Quadratic and Nielsen
-                    //h = ( JtWJ + lambda * math.eye(Npar) ) \ JtWdy;
-
                     h = math.solve(math.add(JtWJ,math.multiply( Matrix.eye(Npar),lambda)),JtWdy);
             }
 
-            /*for(var k=0;k< h.length;k++){
-             h[k]=[h[k]];
-             }*/
-            //console.log("h "+h);
-            //h=math.matrix(h);
-            //  big = max(abs(h./p)) > 2;
-            //this is a big step
-            // --- Are parameters [p+h] much better than [p] ?
             var hidx = new Array(idx.length);
             for(k=0;k<idx.length;k++){
                 hidx[k]=h[idx[k]];
@@ -245,12 +221,11 @@ var LM = {
             var rho = (X2-X2_try)/math.multiply(math.multiply(math.transpose(h),2),math.add(math.multiply(lambda, h),JtWdy));
             //console.log("rho "+rho);
             if ( rho > epsilon_4 ) {		// it IS significantly better
-                //console.log("Here");
                 dX2 = X2 - X2_old;
                 X2_old = X2;
                 p_old = p;
                 y_old = y_hat;
-                p = p_try;			// accept p_try
+                p = p_try;
 
                 result = this.lm_matx(func, t, p_old, y_old, dX2, J, p, y_dat, weight_sq, dp, c);
                 JtWJ = result.JtWJ,JtWdy=result.JtWdy,X2=result.Chi_sq,y_hat=result.y_hat,J=result.J;
@@ -294,44 +269,14 @@ var LM = {
 
         // --- convergence achieved, find covariance and confidence intervals
 
-        // equal weights for paramter error analysis
+        // equal weights for parameter error analysis
         weight_sq = math.multiply(math.multiply(math.transpose(delta_y),delta_y), Matrix.ones(Npnt,1));
 
         weight_sq.apply(function(i,j){
             weight_sq[i][j] = (Npnt-Nfit+1)/weight_sq[i][j];
         });
-        //console.log(weight_sq);
         result = this.lm_matx(func,t,p_old,y_old,-1,J,p,y_dat,weight_sq,dp,c);
         JtWJ = result.JtWJ,JtWdy=result.JtWdy,X2=result.Chi_sq,y_hat=result.y_hat,J=result.J;
-
-        /*if nargout > 2				// standard error of parameters
-         covar = inv(JtWJ);
-         sigma_p = sqrt(diag(covar));
-         end
-
-         if nargout > 3				// standard error of the fit
-         //  sigma_y = sqrt(diag(J * covar * J'));	// slower version of below
-         sigma_y = zeros(Npnt,1);
-         for i=1:Npnt
-         sigma_y(i) = J(i,:) * covar * J(i,:)';
-         end
-         sigma_y = sqrt(sigma_y);
-         end
-
-         if nargout > 4				// parameter correlation matrix
-         corr = covar ./ [sigma_p*sigma_p'];
-         end
-
-         if nargout > 5				// coefficient of multiple determination
-         R_sq = corrcoef([y_dat y_hat]);
-         R_sq = R_sq(1,2).^2;
-         end
-
-         if nargout > 6				// convergence history
-         cvg_hst = cvg_hst(1:iteration,:);
-         end*/
-
-        // endfunction  # ---------------------------------------------------------- LM
 
         return { p:p, X2:X2};
     },
@@ -363,35 +308,30 @@ var LM = {
 
         var m = y.length;			// number of data points
         var n = p.length;			// number of parameters
-
+        var y1;
         dp = dp || math.multiply( Matrix.ones(n, 1), 0.001);
 
-        var ps = p.clone();//JSON.parse(JSON.stringify(p));
-        //var ps = $.extend(true, [], p);
+        var ps = p.clone();
+
         var J = new Matrix(m,n), del =new Array(n);         // initialize Jacobian to Zero
 
         for (var j = 0;j < n; j++) {
-            //console.log(j+" "+dp[j]+" "+p[j]+" "+ps[j]+" "+del[j]);
+
             del[j] = dp[j]*(1+Math.abs(p[j][0]));  // parameter perturbation
-            p[j] = [ps[j][0]+del[j]];	      // perturb parameter p(j)
-            //console.log(j+" "+dp[j]+" "+p[j]+" "+ps[j]+" "+del[j]);
+            p[j] = [ps[j][0]+del[j]];
+
 
             if (del[j] != 0){
                 y1 = func(t, p, c);
-                //func_calls = func_calls + 1;
                 if (dp[j][0] < 0) {		// backwards difference
-                    //J(:,j) = math.dotDivide(math.subtract(y1, y),del[j]);//. / del[j];
-                    //console.log(del[j]);
-                    //console.log(y);
                     var column = math.dotDivide(math.subtract(y1, y),del[j]);
-                    for(var k=0;k< m;k++){
+                    for(var k=0; k < m; k++) {
                         J[k][j]=column[k][0];
                     }
                     //console.log(column);
                 }
                 else{
                     p[j][0] = ps[j][0] - del[j];
-                    //J(:,j) = (y1 - feval(func, t, p, c)). / (2. * del[j]);
                     var column = math.dotDivide(math.subtract(y1,func(t,p,c)),2*del[j]);
                     for(var k=0;k< m;k++){
                         J[k][j]=column[k][0];
@@ -403,12 +343,9 @@ var LM = {
             p[j] = ps[j];		// restore p(j)
 
         }
-        //console.log("lm_FD_J: "+ JSON.stringify(J));
         return J;
-
     },
 
-    // endfunction # -------------------------------------------------- LM_FD_J
     lm_Broyden_J: function(p_old,y_old,J,p,y){
         // J = lm_Broyden_J(p_old,y_old,J,p,y)
         // carry out a rank-1 update to the Jacobian matrix using Broyden's equation
@@ -420,18 +357,13 @@ var LM = {
         // y     = model evaluation at current  set of parameters, y_hat(t;p)
         //---------- OUTPUT VARIABLES -------
         // J = rank-1 update to Jacobian Matrix J(i,j)=dy(i)/dp(j)	i=1:n; j=1:m
-        //console.log(p+" X "+ p_old)
         var h  = math.subtract(p, p_old);
 
-        //console.log("hhh "+h);
         var h_t = math.transpose(h);
         h_t.div(math.multiply(h_t,h));
 
-        //console.log(h_t);
-        //J = J + ( y - y_old - J*h )*h' / (h'*h);	// Broyden rank-1 update eq'n
         J = math.add(J, math.multiply(math.subtract(y, math.add(y_old,math.multiply(J,h))),h_t));
         return J;
-        // endfunction # ---------------------------------------------- LM_Broyden_J
     },
 
     lm_matx : function (func,t,p_old,y_old,dX2,J,p,y_dat,weight_sq,dp,c,iteration){
@@ -470,50 +402,31 @@ var LM = {
         //   Press, et al., Numerical Recipes, Cambridge Univ. Press, 1992, Chapter 15.
 
 
-        var Npnt = y_dat.length;		// number of data points
-        var Npar = p.length;		// number of parameters
+        var Npnt = y_dat.length;
+        var Npar = p.length;
 
         dp = dp || 0.001;
 
 
-        //var JtWJ = new Matrix.zeros(Npar);
-        //var JtWdy  = new Matrix.zeros(Npar,1);
-
-        var y_hat = func(t,p,c);	// evaluate model using parameters 'p'
-        //func_calls = func_calls + 1;
-        //console.log(J);
+        var y_hat = func(t,p,c);
         if ( (iteration%(2*Npar))==0 || dX2 > 0 ) {
-            //console.log("Par");
-            J = this.lm_FD_J(func, t, p, y_hat, dp, c);		// finite difference
+            J = this.lm_FD_J(func, t, p, y_hat, dp, c);
         }
         else{
-            //console.log("ImPar");
             J = this.lm_Broyden_J(p_old, y_old, J, p, y_hat); // rank-1 update
         }
-        //console.log(y_dat);
-        //console.log(y_hat);
         var delta_y = math.subtract(y_dat, y_hat);	// residual error between model and data
-        //console.log(delta_y[0][0]);
-        //console.log(delta_y.rows+" "+delta_y.columns+" "+JSON.stringify(weight_sq));
-        //var Chi_sq = delta_y' * ( delta_y .* weight_sq ); 	// Chi-squared error criteria
         var Chi_sq = math.multiply(math.transpose(delta_y),math.dotMultiply(delta_y,weight_sq));
-        //JtWJ  = J' * ( J .* ( weight_sq * ones(1,Npar) ) );
         var Jt = math.transpose(J);
 
-        //console.log(weight_sq);
 
         var JtWJ = math.multiply(Jt, math.dotMultiply(J,math.multiply(weight_sq, Matrix.ones(1,Npar))));
 
-        //JtWdy = J' * ( weight_sq .* delta_y );
         var JtWdy = math.multiply(Jt, math.dotMultiply(weight_sq,delta_y));
 
 
         return {JtWJ:JtWJ,JtWdy:JtWdy,Chi_sq:Chi_sq,y_hat:y_hat,J:J};
-        // endfunction  # ------------------------------------------------------ LM_MATX
     }
-
-
-
 };
 
 module.exports = LM;
