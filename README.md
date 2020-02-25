@@ -1,3 +1,5 @@
+DEPRECATED: please use: https://github.com/mljs/levenberg-marquardt
+
 # ml-curve-fitting
 
   [![NPM version][npm-image]][npm-url]
