@@ -1,13 +1,12 @@
-##Trilateration algorithm
+# Trilateration algorithm
 
-The problem definition can be found here.[https://en.wikipedia.org/wiki/Trilateration]
+The problem definition can be found [here](https://en.wikipedia.org/wiki/Trilateration).
 
-For the example we will use the points(x,y, distance to unknown point) [0.0, 0.0, 10.0], [10.0, 10.0, 10], [10.0, 0.0, 14.142135]
+For the example, we will use the points (x,y, distance to unknown point) [0.0, 0.0, 10.0], [10.0, 10.0, 10], [10.0, 0.0, 14.142135].
 In this case the LM algorithm has to find the (x,y) point such that the distance to the 3 input points is equal to the
 reported distance.
 
-````js
-
+```js
 var Matrix = require("ml-matrix");
 var math = require("../src/algebra");
 var LM = require("../src/LM");
@@ -50,5 +49,4 @@ console.log("Optimus: ");
 console.log(p_fit);
 console.log("Distance to optimus: ")
 console.log(euclidean(t,p_fit,consts));
-
-``
+```
