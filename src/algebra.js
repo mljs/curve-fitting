@@ -5,248 +5,248 @@
  * Non in-place function definitions, compatible with mathjs code *
  */
 
-'use strict';
+"use strict";
 
-var Matrix = require('ml-matrix');
+var Matrix = require("ml-matrix");
 
-function matrix(A,B){
-    return new Matrix(A,B);
+function matrix(A, B) {
+  return new Matrix(A, B);
 }
 
-function ones(rows, cols){
-    return Matrix.ones(rows,cols);
+function ones(rows, cols) {
+  return Matrix.ones(rows, cols);
 }
 
-function eye(rows, cols){
-    return Matrix.eye(rows, cols);
+function eye(rows, cols) {
+  return Matrix.eye(rows, cols);
 }
 
-function zeros(rows, cols){
-    return Matrix.zeros(rows, cols);
+function zeros(rows, cols) {
+  return Matrix.zeros(rows, cols);
 }
 
-function random(rows, cols){
-    return Matrix.rand(rows,cols);
+function random(rows, cols) {
+  return Matrix.rand(rows, cols);
 }
 
-function transpose(A){
-    if(typeof A == 'number')
-        return A;
-    var result = A.clone();
-    return result.transpose();
+function transpose(A) {
+  if (typeof A == "number") return A;
+  var result = A.clone();
+  return result.transpose();
 }
 
-function add(A, B){
-    if(typeof A == 'number'&&typeof B === 'number')
-        return A+B;
-    if(typeof A == 'number')
-        return this.add(B,A);
+function add(A, B) {
+  if (typeof A == "number" && typeof B === "number") return A + B;
+  if (typeof A == "number") return this.add(B, A);
 
-    var result = A.clone();
-    return result.add(B);
-
+  var result = A.clone();
+  return result.add(B);
 }
 
-function subtract(A, B){
-    if(typeof A == 'number'&&typeof B === 'number')
-        return A-B;
-    if(typeof A == 'number')
-        return this.subtract(B,A);
-    var result = A.clone();
-    return result.sub(B);
+function subtract(A, B) {
+  if (typeof A == "number" && typeof B === "number") return A - B;
+  if (typeof A == "number") return this.subtract(B, A);
+  var result = A.clone();
+  return result.sub(B);
 }
 
-function multiply(A, B){
-    if(typeof A == 'number'&&typeof B === 'number')
-        return A*B;
-    if(typeof A == 'number')
-        return this.multiply(B,A);
+function multiply(A, B) {
+  if (typeof A == "number" && typeof B === "number") return A * B;
+  if (typeof A == "number") return this.multiply(B, A);
 
-    var result = A.clone();
+  var result = A.clone();
 
-    if(typeof B === 'number')
-        result.mul(B);
-    else
-        result = result.mmul(B);
+  if (typeof B === "number") result.mul(B);
+  else result = result.mmul(B);
 
-    if(result.rows==1&&result.columns==1)
-        return result[0][0];
-    else
-        return result;
-
+  if (result.rows == 1 && result.columns == 1) return result[0][0];
+  else return result;
 }
 
-function dotMultiply(A, B){
-    var result = A.clone();
-    return result.mul(B);
+function dotMultiply(A, B) {
+  var result = A.clone();
+  return result.mul(B);
 }
 
-function dotDivide(A, B){
-    var result = A.clone();
-    return result.div(B);
-}
-
-function diag(A){
-    var diag = null;
-    var rows = A.rows, cols = A.columns, j, r;
-    //It is an array
-    if(typeof cols === "undefined" && (typeof A)=='object'){
-        if(A[0]&&A[0].length){
-            rows = A.length;
-            cols = A[0].length;
-            r = Math.min(rows,cols);
-            diag = Matrix.zeros(cols, cols);
-            for (j = 0; j < cols; j++) {
-                diag[j][j]=A[j][j];
-            }
-        }
-        else{
-            cols = A.length;
-            diag = Matrix.zeros(cols, cols);
-            for (j = 0; j < cols; j++) {
-                diag[j][j]=A[j];
-            }
-        }
-
+// multiply each row of matrix A by the corresponding value in B (Nx1 column vector)
+function rowMultiply(A, B) {
+  if (B.columns != 1) {
+    throw new RangeError("B should be a column vector");
+  }
+  if (A.rows != B.rows) {
+    throw new RangeError("A and B should have same number of rows");
+  }
+  var result = new Matrix(A.rows, A.columns);
+  for (let row = 0; row < result.rows; row++) {
+    for (let column = 0; column < result.columns; column++) {
+      result[row][column] = A[row][column] * B[row][0];
     }
-    if(rows == 1){
-        diag = Matrix.zeros(cols, cols);
-        for (j = 0; j < cols; j++) {
-            diag[j][j]=A[0][j];
-        }
-    }
-    else{
-        if(rows>0 && cols > 0){
-            r = Math.min(rows,cols);
-            diag = new Array(r);
-            for (j = 0; j < r; j++) {
-                diag[j] = A[j][j];
-            }
-        }
-    }
-    return diag;
+  }
+  return result;
 }
 
-function min(A, B){
-    if(typeof A==='number' && typeof B ==='number')
-        return Math.min(A,B);
-    var ii = A.rows, jj = A.columns;
-    var result = new Matrix(ii,jj);
-    for (var i = 0; i < ii; i++) {
-        for (var j = 0; j < jj; j++) {
-            if (A[i][j] < B[i][j]) {
-                result[i][j] = A[i][j];
-            }
-            else{
-                result[i][j] = B[i][j];
-            }
-        }
+function dotDivide(A, B) {
+  var result = A.clone();
+  return result.div(B);
+}
+
+function diag(A) {
+  var diag = null;
+  var rows = A.rows,
+    cols = A.columns,
+    j,
+    r;
+  //It is an array
+  if (typeof cols === "undefined" && typeof A == "object") {
+    if (A[0] && A[0].length) {
+      rows = A.length;
+      cols = A[0].length;
+      r = Math.min(rows, cols);
+      diag = Matrix.zeros(cols, cols);
+      for (j = 0; j < cols; j++) {
+        diag[j][j] = A[j][j];
+      }
+    } else {
+      cols = A.length;
+      diag = Matrix.zeros(cols, cols);
+      for (j = 0; j < cols; j++) {
+        diag[j][j] = A[j];
+      }
     }
-    return result;
-}
-
-function max(A, B){
-    if(typeof A==='number' && typeof B ==='number')
-        return Math.max(A,B);
-    var ii = A.rows, jj = A.columns;
-    var result = new Matrix(ii,jj);
-    for (var i = 0; i < ii; i++) {
-        for (var j = 0; j < jj; j++) {
-            if (A[i][j] > B[i][j]) {
-                result[i][j] = A[i][j];
-            }
-            else{
-                result[i][j] = B[i][j];
-            }
-        }
+  }
+  if (rows == 1) {
+    diag = Matrix.zeros(cols, cols);
+    for (j = 0; j < cols; j++) {
+      diag[j][j] = A[0][j];
     }
-    return result;
-}
-
-function sqrt(A){
-    if(typeof A==='number' )
-        return Math.sqrt(A);
-    var ii = A.rows, jj = A.columns;
-    var result = new Matrix(ii,jj);
-    for (var i = 0; i < ii; i++) {
-        for (var j = 0; j < jj; j++) {
-            result[i][j] = Math.sqrt(A[i][j]);
-
-        }
+  } else {
+    if (rows > 0 && cols > 0) {
+      r = Math.min(rows, cols);
+      diag = new Array(r);
+      for (j = 0; j < r; j++) {
+        diag[j] = A[j][j];
+      }
     }
-    return result;
+  }
+  return diag;
 }
 
-function abs(A){
-    if(typeof A==='number' )
-        return Math.abs(A);
-    var ii = A.rows, jj = A.columns;
-    var result = new Matrix(ii,jj);
-    for (var i = 0; i < ii; i++) {
-        for (var j = 0; j < jj; j++) {
-            result[i][j] = Math.abs(A[i][j]);
-
-        }
+function min(A, B) {
+  if (typeof A === "number" && typeof B === "number") return Math.min(A, B);
+  var ii = A.rows,
+    jj = A.columns;
+  var result = new Matrix(ii, jj);
+  for (var i = 0; i < ii; i++) {
+    for (var j = 0; j < jj; j++) {
+      if (A[i][j] < B[i][j]) {
+        result[i][j] = A[i][j];
+      } else {
+        result[i][j] = B[i][j];
+      }
     }
-    return result;
+  }
+  return result;
 }
 
-function exp(A){
-    if(typeof A==='number' )
-        return Math.sqrt(A);
-    var ii = A.rows, jj = A.columns;
-    var result = new Matrix(ii,jj);
-    for (var i = 0; i < ii; i++) {
-        for (var j = 0; j < jj; j++) {
-            result[i][j] = Math.exp(A[i][j]);
-        }
+function max(A, B) {
+  if (typeof A === "number" && typeof B === "number") return Math.max(A, B);
+  var ii = A.rows,
+    jj = A.columns;
+  var result = new Matrix(ii, jj);
+  for (var i = 0; i < ii; i++) {
+    for (var j = 0; j < jj; j++) {
+      if (A[i][j] > B[i][j]) {
+        result[i][j] = A[i][j];
+      } else {
+        result[i][j] = B[i][j];
+      }
     }
-    return result;
+  }
+  return result;
 }
 
-function dotPow(A, b){
-    if(typeof A==='number' )
-        return Math.pow(A,b);
-    //console.log(A);
-    var ii = A.rows, jj = A.columns;
-    var result = new Matrix(ii,jj);
-    for (var i = 0; i < ii; i++) {
-        for (var j = 0; j < jj; j++) {
-            result[i][j] = Math.pow(A[i][j],b);
-        }
+function sqrt(A) {
+  if (typeof A === "number") return Math.sqrt(A);
+  var ii = A.rows,
+    jj = A.columns;
+  var result = new Matrix(ii, jj);
+  for (var i = 0; i < ii; i++) {
+    for (var j = 0; j < jj; j++) {
+      result[i][j] = Math.sqrt(A[i][j]);
     }
-    return result;
+  }
+  return result;
 }
 
-function solve(A, B){
-    return A.solve(B);
+function abs(A) {
+  if (typeof A === "number") return Math.abs(A);
+  var ii = A.rows,
+    jj = A.columns;
+  var result = new Matrix(ii, jj);
+  for (var i = 0; i < ii; i++) {
+    for (var j = 0; j < jj; j++) {
+      result[i][j] = Math.abs(A[i][j]);
+    }
+  }
+  return result;
 }
 
-function inv(A){
-    if(typeof A ==="number")
-        return 1/A;
-    return A.inverse();
+function exp(A) {
+  if (typeof A === "number") return Math.sqrt(A);
+  var ii = A.rows,
+    jj = A.columns;
+  var result = new Matrix(ii, jj);
+  for (var i = 0; i < ii; i++) {
+    for (var j = 0; j < jj; j++) {
+      result[i][j] = Math.exp(A[i][j]);
+    }
+  }
+  return result;
+}
+
+function dotPow(A, b) {
+  if (typeof A === "number") return Math.pow(A, b);
+  //console.log(A);
+  var ii = A.rows,
+    jj = A.columns;
+  var result = new Matrix(ii, jj);
+  for (var i = 0; i < ii; i++) {
+    for (var j = 0; j < jj; j++) {
+      result[i][j] = Math.pow(A[i][j], b);
+    }
+  }
+  return result;
+}
+
+function solve(A, B) {
+  return A.solve(B);
+}
+
+function inv(A) {
+  if (typeof A === "number") return 1 / A;
+  return A.inverse();
 }
 
 module.exports = {
-    transpose:transpose,
-    add:add,
-    subtract:subtract,
-    multiply:multiply,
-    dotMultiply:dotMultiply,
-    dotDivide:dotDivide,
-    diag:diag,
-    min:min,
-    max:max,
-    solve:solve,
-    inv:inv,
-    sqrt:sqrt,
-    exp:exp,
-    dotPow:dotPow,
-    abs:abs,
-    matrix:matrix,
-    ones:ones,
-    zeros:zeros,
-    random:random,
-    eye:eye
+  transpose: transpose,
+  add: add,
+  subtract: subtract,
+  multiply: multiply,
+  dotMultiply: dotMultiply,
+  rowMultiply: rowMultiply,
+  dotDivide: dotDivide,
+  diag: diag,
+  min: min,
+  max: max,
+  solve: solve,
+  inv: inv,
+  sqrt: sqrt,
+  exp: exp,
+  dotPow: dotPow,
+  abs: abs,
+  matrix: matrix,
+  ones: ones,
+  zeros: zeros,
+  random: random,
+  eye: eye,
 };
