@@ -161,35 +161,11 @@ describe("Levenberg-Marquardt", function () {
       consts,
       opts
     );
+    console.log({ p_fit, p: p_fit.p });
     p_fit = p_fit.p;
     p_fit[0][0].should.approximatelyDeep(4.08, 0.01); //Center
     p_fit[1][0].should.approximatelyDeep(0.176, 0.01); //hwhh
     p_fit[2][0].should.approximatelyDeep(1, 0.01); //height
     p_fit[3][0].should.approximatelyDeep(0, 0.01); //constant
-  });
-
-  it("linear regression", function () {
-    function line(t, p) {
-      var result = math.matrix(t.rows, 1);
-
-      for (var i = 0; i < t.rows; t++) {
-        result[i][0] = p[0] * t[i][0] + p[1];
-      }
-      return result;
-    }
-
-    var t = math.matrix([[0], [1], [2], [3], [4], [5]]);
-    var y = math.matrix([[1], [3], [5], [7], [9], [11]]);
-
-    var p_init = math.matrix([[0], [0]]);
-
-    var p_min = math.matrix([[-5], [-5]]);
-    var p_max = math.matrix([[5], [5]]);
-    var weight = [1];
-
-    console.log({ t, y, p_init });
-    var fit = LM.optimize(line, p_init, t, y, weight, 0.001, p_min, p_max);
-
-    console.log(fit);
   });
 });
