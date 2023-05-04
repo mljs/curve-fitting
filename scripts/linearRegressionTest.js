@@ -20,4 +20,4 @@ console.log({ t, y, p_init });
 var fit = LM.optimize(line, p_init, t, y, weight, dp, p_min, p_max);
 
 // p should be 2, 1
-console.log(fit);
+console.log(fit.p);

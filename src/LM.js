@@ -75,7 +75,7 @@ var LM = {
     var p_old = Matrix.zeros(Npar, 1); // previous set of parameters
     var y_old = Matrix.zeros(Npnt, 1); // previous model, y_old = y_hat(t;p_old)
     var X2 = 1e-2 / eps; // a really big initial Chi-sq value
-    console.log({ X2_1: X2 });
+
     var X2_old = 1e-2 / eps; // a really big initial Chi-sq value
     var J = Matrix.zeros(Npnt, Npar);
 
@@ -151,8 +151,6 @@ var LM = {
     }
 
     // initialize Jacobian with finite difference calculation
-    console.log("INITIALISE JACOBIAN MATRIX");
-    console.log({ func, t, p_old, y_old, J, p, y_dat, weight_sq, dp, c });
     var result = this.lm_matx(
       func,
       t,
@@ -166,9 +164,6 @@ var LM = {
       dp,
       c
     );
-    console.log("RESULT");
-    console.log(result);
-
     var JtWJ = result.JtWJ,
       JtWdy = result.JtWdy,
       X2 = result.Chi_sq,
@@ -524,11 +519,9 @@ var LM = {
     var Npar = p.length;
 
     dp = dp || 0.001;
-    console.log({ dp });
 
     var y_hat = func(t, p, c);
 
-    console.log(y_hat);
     if (iteration % (2 * Npar) == 0 || dX2 > 0) {
       J = this.lm_FD_J(func, t, p, y_hat, dp, c);
     } else {
