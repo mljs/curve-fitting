@@ -41,7 +41,8 @@ var p_init = math.matrix([[5], [5]]);
 var p_min = math.matrix([[-20], [-20]]);
 var p_max = math.matrix([[20], [25]]);
 
-console.log({ p_init, t, y_data });
+console.log({ p_init, t, y_data, weight });
+
 var p_fit = LM.optimize(
   euclidean,
   p_init,

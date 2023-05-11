@@ -192,6 +192,13 @@ var LM = {
       // incremental change in parameters
       switch (Update_Type) {
         case 1: // Marquardt
+          // console.log({
+          //   A: math.add(
+          //     JtWJ,
+          //     math.multiply(math.diag(math.diag(JtWJ)), lambda)
+          //   ),
+          //   B: JtWdy,
+          // });
           h = math.solve(
             math.add(JtWJ, math.multiply(math.diag(math.diag(JtWJ)), lambda)),
             JtWdy
@@ -507,7 +514,7 @@ var LM = {
     //---------- OUTPUT VARIABLES -------
     // JtWJ	 = linearized Hessian matrix (inverse of covariance matrix)
     // JtWdy   = linearized fitting vector
-    // Chi_sq = Chi-squared criteria: weighted sum of the squared residuals WSSR
+    // Chi_sq = Chi-squared criteria: weighted sum of the squared residuals (WSSR)
     // y_hat  = model evaluated with parameters 'p'
     // J   = m-by-n Jacobian of model, y_hat, with respect to parameters, p
 
@@ -527,10 +534,12 @@ var LM = {
     } else {
       J = this.lm_Broyden_J(p_old, y_old, J, p, y_hat); // rank-1 update
     }
+    console.log({ J });
     var delta_y = math.subtract(y_dat, y_hat); // residual error between model and data
+
     var Chi_sq = math.multiply(
       math.transpose(delta_y),
-      math.dotMultiply(delta_y, weight_sq)
+      math.rowMultiply(delta_y, weight_sq)
     );
     var Jt = math.transpose(J);
 
@@ -539,10 +548,23 @@ var LM = {
       math.dotMultiply(J, math.multiply(weight_sq, Matrix.ones(1, Npar)))
     );
 
-    var JtWdy = math.multiply(Jt, math.dotMultiply(weight_sq, delta_y));
+    var JtWdy = math.multiply(Jt, math.rowMultiply(delta_y, weight_sq));
 
     return { JtWJ: JtWJ, JtWdy: JtWdy, Chi_sq: Chi_sq, y_hat: y_hat, J: J };
   },
 };
+
+function distance(v1, v2) {
+  const nbPoints = v1.length;
+  const nbDimensions = v1[0].length;
+  let result = new Array(nbPoints);
+
+  for (let point = 0; point < nbPoints; point++) {
+    let squaredDistance = 0;
+    for (let i; i < nbDimensions; i++) {
+      squaredDistance += v1[point][i];
+    }
+  }
+}
 
 module.exports = LM;

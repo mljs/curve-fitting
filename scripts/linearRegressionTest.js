@@ -18,7 +18,7 @@ var weight = [1];
 var dp = -0.01;
 
 console.log({ t, y, p_init });
-var fit = LM.optimize(line, p_init, t, y2, weight, dp, p_min, p_max);
+var fit = LM.optimize(line, p_init, t, y, weight, dp, p_min, p_max);
 
 // p should be 2, 1
 console.log("LINEAR REGRESSION");
